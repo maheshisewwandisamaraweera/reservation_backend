@@ -1,24 +1,29 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { ClientsModule } from './clients/clients.module';
-import { AuthModule } from './auth/auth.module';
+
+import { ServicesModule } from './services/services.module';
+import { AppointmentsModule } from './appointments/appointments.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { PaymentsModule } from './payments/payments.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT) || 5432,
-      username: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASS || 'password',
-      database: process.env.DB_NAME || 'booking_app',
-      autoLoadEntities: true,
-      synchronize: true,
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'yourpassword',
+      database: 'yourdbname',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true, // ⚠️ Only for development
     }),
-    ClientsModule,
-    AuthModule,
+    ServicesModule,
+    AppointmentsModule,
+    ReviewsModule,
+    PaymentsModule,
+    ProfilesModule,
   ],
 })
 export class AppModule {}
