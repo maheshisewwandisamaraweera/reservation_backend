@@ -1,12 +1,12 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('api'); // All routes now start with /api
-  app.enableCors();            // Enable CORS if your frontend (React, etc.) needs to access this API
+  app.useGlobalPipes(new ValidationPipe()); // <-- required for DTO validation
 
-  await app.listen(3000);      // App runs on http://localhost:3000
+  await app.listen(3000);
 }
 bootstrap();
