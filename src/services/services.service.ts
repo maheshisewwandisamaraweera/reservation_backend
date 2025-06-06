@@ -1,13 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Service } from './entities/service.entity';
 
 @Injectable()
 export class ServicesService {
-  private services = [
-    { id: 1, name: 'Haircut', price: 1000 },
-    { id: 2, name: 'Facial', price: 2500 },
-  ];
+  constructor(
+    @InjectRepository(Service)
+    private servicesRepository: Repository<Service>,
+  ) {}
 
-  getAll() {
-    return this.services;
+  findAll(): Promise<Service[]> {
+    return this.servicesRepository.find();
+  }
+
+  findOne(id: number): Promise<Service> {
+    return this.servicesRepository.findOneBy({ id });
+  }
+
+  async create(service: Partial<Service>): Promise<Service> {
+    const newService = this.servicesRepository.create(service);
+    return this.servicesRepository.save(newService);
   }
 }

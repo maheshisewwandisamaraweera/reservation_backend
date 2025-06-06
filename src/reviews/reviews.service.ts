@@ -1,15 +1,51 @@
+// src/reviews/reviews.service.ts
+
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Review } from './entities/review.entity';
+import { CreateReviewDto } from './dto/create-review.dto';
+import { Service } from '../services/entities/service.entity';
 
 @Injectable()
 export class ReviewsService {
-  private reviews = [];
+  constructor(
+    @InjectRepository(Review)
+    private repo: Repository<Review>,
 
-  findByService(serviceName: string) {
-    return this.reviews.filter(r => r.serviceName === serviceName);
+    @InjectRepository(Service)
+    private serviceRepo: Repository<Service>,
+  ) {}
+
+  async create(dto: CreateReviewDto) {
+    const service = await this.serviceRepo.findOneBy({ id: dto.serviceId });
+
+    if (!service) {
+      throw new Error('Service not found');
+    }
+
+    const review = this.repo.create({
+      username: dto.userName, // make sure your DTO uses "userName"
+      rating: dto.rating,
+      comment: dto.comment,
+      service,
+    });
+
+    return this.repo.save(review);
   }
 
-  create(reviewData: any) {
-    this.reviews.push(reviewData);
-    return { message: 'Review submitted' };
+  findAll() {
+    return this.repo.find({ relations: ['service'] });
+  }
+
+  findByService(serviceId: number) {
+    return this.repo.find({
+      where: { service: { id: serviceId } },
+      relations: ['service'],
+    });
+  }
+
+  remove(id: number) {
+    return this.repo.delete(id);
   }
 }

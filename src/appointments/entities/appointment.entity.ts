@@ -1,22 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Service } from '../../services/entities/service.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Appointment {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  serviceName: string;
+  @ManyToOne(() => User, user => user.appointments)
+  user: User;
 
-  @Column({ type: 'varchar', length: 255 })
-  customerName: string;
+  @ManyToOne(() => Service, service => service.appointments)
+  service: Service;
 
-  @Column({ type: 'timestamp' })
-  appointmentTime: Date;
+  @Column()
+  date: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column()
+  time: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ default: false })
+  confirmed: boolean;
 }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Service } from '../../services/entities/service.entity';
 
 @Entity()
 export class Review {
@@ -6,14 +7,14 @@ export class Review {
   id: number;
 
   @Column()
-  serviceName: string;
-
-  @Column()
-  userId: string;
+  username: string;
 
   @Column()
   rating: number;
 
   @Column()
   comment: string;
+
+  @ManyToOne(() => Service, service => service.reviews)
+  service: Service;
 }

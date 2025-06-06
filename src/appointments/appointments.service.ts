@@ -1,15 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Appointment } from './entities/appointment.entity';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
 @Injectable()
 export class AppointmentsService {
-  private appointments = [];
+  constructor(
+    @InjectRepository(Appointment)
+    private repo: Repository<Appointment>,
+  ) {}
 
-  findByUser(userId: string) {
-    return this.appointments.filter(app => app.userId === userId);
+  create(dto: CreateAppointmentDto) {
+    const appointment = this.repo.create(dto);
+    return this.repo.save(appointment);
   }
 
-  create(appointmentData: any) {
-    this.appointments.push(appointmentData);
-    return { message: 'Appointment booked successfully' };
+  findAll() {
+    return this.repo.find();
+  }
+
+  findOne(id: number) {
+    return this.repo.findOneBy({ id });
+  }
+
+  update(id: number, dto: UpdateAppointmentDto) {
+    return this.repo.update(id, dto);
+  }
+
+  remove(id: number) {
+    return this.repo.delete(id);
   }
 }

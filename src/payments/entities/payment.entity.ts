@@ -1,19 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Payment {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  appointmentId: string; // reference to Appointment
+  @Column()
+  userId: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column()
+  serviceName: string;
+
+  @Column()
   amount: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  paymentStatus: string; // e.g., "pending", "completed"
+  @Column()
+  paymentDate: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column()
+  paymentMethod: string;
+
+  @Column()
+  transactionId: string;
 }

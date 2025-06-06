@@ -1,29 +1,28 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { ServicesModule } from './services/services.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { UsersModule } from './users/users.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { PaymentsModule } from './payments/payments.module';
-import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
+      host: 'localhost',    // your PG host
+      port: 5432,           // your PG port
+      username: 'yourusername',
       password: 'yourpassword',
-      database: 'yourdbname',
+      database: 'yourdatabase',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // ⚠️ Only for development
+      synchronize: true, // set false in production; true auto creates tables
     }),
     ServicesModule,
     AppointmentsModule,
+    UsersModule,
     ReviewsModule,
     PaymentsModule,
-    ProfilesModule,
   ],
 })
 export class AppModule {}

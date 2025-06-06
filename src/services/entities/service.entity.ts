@@ -1,13 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Appointment } from '../../appointments/entities/appointment.entity';
+import { Review } from '../../reviews/entities/review.entity';
 
 @Entity()
 export class Service {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column('decimal')
-  price: number;
+  @Column()
+  category: string;
+
+  @Column()
+  price: string;
+
+  @OneToMany(() => Appointment, appointment => appointment.service)
+  appointments: Appointment[];
+
+  @OneToMany(() => Review, review => review.service)
+  reviews: Review[];
 }
