@@ -5,6 +5,9 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { UsersModule } from './users/users.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { PaymentsModule } from './payments/payments.module';
+import { User } from './user/user.entity';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +26,16 @@ import { PaymentsModule } from './payments/payments.module';
     UsersModule,
     ReviewsModule,
     PaymentsModule,
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'your_password',
+      database: 'your_db',
+      entities: [User],
+      synchronize: true,
+    }),
+    UserModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
