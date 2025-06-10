@@ -9,8 +9,26 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ unique: true })
+  username: string;
+
   @Column()
-  name: string;
+  password: string;
+
+  @Column()
+  address: string;
+
+  @Column({ nullable: true })
+  businessName: string;
+
+  @Column({ nullable: true })
+  businessType: string;
+
+  @Column()
+  contactNumber: string;
+
+  @Column()
+  role: string;
 
   @OneToMany(() => Appointment, appointment => appointment.user)
   appointments: Appointment[];

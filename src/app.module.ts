@@ -12,53 +12,23 @@ import { PaymentsModule } from './payments/payments.module';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { typeOrmConfig } from './config/typeorm.config';
+import { HelloController } from './hello/hello.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'your_username',
-      password: 'your_password',
-      database: 'your_database',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(typeOrmConfig),
     AppointmentModule,
     ServiceProviderModule,
-      host: 'localhost', // or your DB host
-      port: 5432,
-      username: 'your_db_user',
-      password: 'your_db_password',
-      database: 'your_db_name',
-      entities: [Staff],
-      synchronize: true, // Only in dev mode!
-    }),
     StaffModule,
-      host: 'localhost',    // your PG host
-      port: 5432,           // your PG port
-      username: 'yourusername',
-      password: 'yourpassword',
-      database: 'yourdatabase',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // set false in production; true auto creates tables
-    }),
     ServicesModule,
     AppointmentsModule,
     UsersModule,
     ReviewsModule,
     PaymentsModule,
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'your_password',
-      database: 'your_db',
-      entities: [User],
-      synchronize: true,
-    }),
     UserModule,
     AuthModule,
   ],
+  controllers: [HelloController],
 })
 export class AppModule {}

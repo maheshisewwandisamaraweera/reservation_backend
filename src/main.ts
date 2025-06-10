@@ -6,7 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
-  app.useGlobalPipes(new ValidationPipe()); // <-- required for DTO validation
+  //app.useGlobalPipes(new ValidationPipe()); // <-- required for DTO validation
   await app.listen(3000);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();

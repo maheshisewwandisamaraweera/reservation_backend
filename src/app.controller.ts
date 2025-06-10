@@ -4,6 +4,6 @@ import { Controller, Get } from '@nestjs/common';
 export class AppController {
   @Get()
   getStatus(): string {
-    return 'Authentication API is running!';
+    return 'API is running';
   }
 }
