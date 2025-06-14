@@ -9,8 +9,13 @@ export class UserController {
   @Post('register')
   async register(@Body() body: CreateUserDto) {
     console.log('Registering user:', body);
-    const user = await this.userService.createUser(body);
-    const { password, ...userData } = user;
-    return userData;
+    const { user, token } = await this.userService.createUser(body);
+    return { user, token };
+  }
+
+  @Post('login')
+  async login(@Body() body: { username: string; password: string }) {
+    const { user, token } = await this.userService.loginUser(body.username, body.password);
+    return { user, token };
   }
 }
