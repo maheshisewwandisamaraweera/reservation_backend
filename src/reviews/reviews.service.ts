@@ -25,7 +25,7 @@ export class ReviewsService {
     }
 
     const review = this.repo.create({
-      username: dto.userName, // make sure your DTO uses "userName"
+      name: dto.name, // make sure your DTO uses "userName"
       rating: dto.rating,
       comment: dto.comment,
       service,

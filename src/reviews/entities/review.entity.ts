@@ -7,9 +7,9 @@ export class Review {
   id: number;
 
   @Column()
-  username: string;
+  name: string;
 
-  @Column()
+  @Column({ nullable: true })
   rating: number;
 
   @Column()

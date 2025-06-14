@@ -6,7 +6,7 @@ import { CreateReviewDto } from './dto/create-review.dto';
 export class ReviewsController {
   constructor(private readonly service: ReviewsService) {}
 
-  @Post()
+  @Post(':serviceId')
   create(@Body() dto: CreateReviewDto) {
     return this.service.create(dto);
   }
@@ -16,7 +16,7 @@ export class ReviewsController {
     return this.service.findAll();
   }
 
-  @Get('service/:serviceId')
+  @Get(':serviceId')
   findByService(@Param('serviceId') serviceId: string) {
     return this.service.findByService(+serviceId); // Convert to number
   }
