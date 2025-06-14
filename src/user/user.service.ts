@@ -48,4 +48,19 @@ export class UserService {
 
     return { user: userData, token };
   }
+
+  async findByUserId(userId: string): Promise<User> {
+    return this.userRepo.findOne({ where: { id: Number(userId) } });
+  }
+
+  async updateUser(userId: string, data: Partial<CreateUserDto>): Promise<User> {
+    const user = await this.findByUserId(userId);
+    if (!user) throw new ConflictException('User not found');
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+    Object.assign(user, data);
+    return this.userRepo.save(user);
+  }
 }

@@ -1,8 +1,8 @@
 // src/reviews/dto/create-review.dto.ts
 
 export class CreateReviewDto {
-  name: string;      // ✅ match the actual property name
+  name: string;    
   rating: number;
   comment: string;
-  serviceId: number;     // ✅ required to link review to a service
+  serviceId: number;    
 }

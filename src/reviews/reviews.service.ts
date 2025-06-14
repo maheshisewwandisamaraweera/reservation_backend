@@ -18,17 +18,17 @@ export class ReviewsService {
   ) {}
 
   async create(dto: CreateReviewDto) {
-    const service = await this.serviceRepo.findOneBy({ id: dto.serviceId });
+    const service = await this.serviceRepo.findOne({ where: { id: dto.serviceId } });
 
     if (!service) {
       throw new Error('Service not found');
     }
 
     const review = this.repo.create({
-      name: dto.name, // make sure your DTO uses "userName"
+      name: dto.name, 
       rating: dto.rating,
       comment: dto.comment,
-      service,
+      service: service,
     });
 
     return this.repo.save(review);

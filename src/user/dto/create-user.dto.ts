@@ -24,4 +24,7 @@ export class CreateUserDto {
 
   @IsOptional()
   businessType?: string;
+
+  @IsOptional()
+  profilePicture?: string;
 }
