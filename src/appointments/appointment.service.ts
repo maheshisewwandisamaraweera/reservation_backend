@@ -1,0 +1,53 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Appointment } from './entities/appointment.entity';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { Service } from '../services/entities/service.entity';
+
+@Injectable()
+export class AppointmentService {
+  constructor(
+    @InjectRepository(Appointment)
+    private repo: Repository<Appointment>,
+
+    @InjectRepository(Service)
+    private serviceRepo: Repository<Service>,
+  ) {}
+
+  async create(dto: CreateAppointmentDto) {
+    const user = await this.serviceRepo.findOne({ where: { id: dto.userId } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const service = await this.serviceRepo.findOne({ where: { id: dto.serviceId } });
+    if (!service) {
+      throw new Error('Service not found');
+    }
+    console.log('Creating appointment for user:', user.id, 'on', dto.date, 'at', dto.time, 'for service:', service.id);
+    const appointment = this.repo.create({
+      date: dto.date,
+      time: dto.time,
+      user: user, 
+      service: service
+    });
+    return this.repo.save(appointment);
+  }
+
+  findAll(userId: string) {
+    return this.repo.find({where: { user: { id: Number(userId) } }, relations: ['service'] });
+  }
+
+  findOne(id: number) {
+    return this.repo.findOneBy({ id });
+  }
+
+  update(id: number, dto: UpdateAppointmentDto) {
+    return this.repo.update(id, dto);
+  }
+
+  remove(id: number) {
+    return this.repo.delete(id);
+  }
+}
