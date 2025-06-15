@@ -37,4 +37,21 @@ export class UserController {
     const updatedUser = await this.userService.updateUser(userId, body);
     return updatedUser;
   }
+
+  @Get('all')
+  async getAllUsers() {
+    const users = await this.userService.findAllUsers();
+    return users;
+  }
+
+  @Put(':userId/status')
+  async updateUserStatus(@Param('userId') userId: string, @Body('status') status: string) {
+    const user = await this.userService.findByUserId(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const updatedUser = await this.userService.updateUserStatus(userId, status);
+    return updatedUser;
+  }
 }

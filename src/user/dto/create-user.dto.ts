@@ -27,4 +27,7 @@ export class CreateUserDto {
 
   @IsOptional()
   profilePicture?: string;
+
+  @IsOptional()
+  status?: string;
 }

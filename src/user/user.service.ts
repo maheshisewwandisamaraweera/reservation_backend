@@ -20,9 +20,27 @@ export class UserService {
 
     const hash = await bcrypt.hash(data.password, 10);
     const newUser = this.userRepo.create({ ...data, password: hash });
+
+    // check the user role and set the default status
+    if (data.role === 'client') {
+      newUser.status = 'active';
+    } else if (data.role === 'serviceProviderAdmin') {
+      newUser.status = 'pending';
+    }else if(data.role === 'serviceProviderStaff') {
+      newUser.status = 'active';
+    } else {
+      console.error('Invalid user role:', data.role);
+      throw new ConflictException('Invalid user role');
+
+    }
+    console.log('User status set to:', newUser);
     await this.userRepo.save(newUser);
 
     const { password, ...userData } = newUser;
+    // generate the token if the account is active
+    if (newUser.status !== 'active') {
+      return { user: userData, token: '' };
+    }
     const token = this.jwtService.sign({ sub: newUser.id, username: newUser.username });
 
     return { user: userData, token };
@@ -39,6 +57,10 @@ export class UserService {
   async loginUser(username: string, password: string): Promise<{ user: Partial<User>, token: string }> {
     const user = await this.findByUsername(username);
     if (!user) throw new ConflictException('User not found');
+
+    if (user.status !== 'active') {
+      throw new ConflictException('Account is not active');
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new ConflictException('Invalid credentials');
@@ -61,6 +83,18 @@ export class UserService {
       data.password = await bcrypt.hash(data.password, 10);
     }
     Object.assign(user, data);
+    return this.userRepo.save(user);
+  }
+
+  async findAllUsers(): Promise<User[]> {
+    return this.userRepo.find();
+  }
+
+  async updateUserStatus(userId: string, status: string): Promise<User> {
+    const user = await this.findByUserId(userId);
+    if (!user) throw new ConflictException('User not found');
+
+    user.status = status;
     return this.userRepo.save(user);
   }
 }
