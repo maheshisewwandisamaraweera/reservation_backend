@@ -5,14 +5,16 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserRole } from './dto/create-user.dto';
 
 @Entity()
 export class User {
+  [x: string]: any;
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  role: string;
+ @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT })
+  role: UserRole;
 
   @Column({ unique: true })
   email: string;

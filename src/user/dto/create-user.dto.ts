@@ -1,8 +1,17 @@
-import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+
+export enum UserRole {
+  CLIENT = 'client',
+  SERVICE_PROVIDER_ADMIN = 'serviceProviderAdmin',
+  SERVICE_PROVIDER_STAFF = 'serviceProviderStaff',
+  SUPER_ADMIN = 'superAdmin',
+}
 
 export class CreateUserDto {
-  @IsNotEmpty()
-  role: string;
+  @IsEnum(UserRole, {
+    message: 'Role must be one of: client, serviceProviderAdmin, serviceProviderStaff, superAdmin',
+  })
+  role: UserRole;
 
   @IsEmail()
   email: string;

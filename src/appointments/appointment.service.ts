@@ -17,12 +17,14 @@ export class AppointmentService {
   ) {}
 
   async create(dto: CreateAppointmentDto) {
+    console.log('Creating appointment with data:', dto.userId);
     const user = await this.serviceRepo.findOne({ where: { id: dto.userId } });
     if (!user) {
       throw new Error('User not found');
     }
     const service = await this.serviceRepo.findOne({ where: { id: dto.serviceId } });
     if (!service) {
+      console.error('Service not found for ID:', dto.serviceId);
       throw new Error('Service not found');
     }
     console.log('Creating appointment for user:', user.id, 'on', dto.date, 'at', dto.time, 'for service:', service.id);

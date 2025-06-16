@@ -5,6 +5,7 @@ import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserRole } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -12,7 +13,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepo: Repository<User>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async createUser(data: CreateUserDto): Promise<{ user: Partial<User>, token: string }> {
     const existing = await this.userRepo.findOne({ where: { email: data.email } });
@@ -24,10 +25,13 @@ export class UserService {
     // check the user role and set the default status
     if (data.role === 'client') {
       newUser.status = 'active';
+      newUser.role = UserRole.CLIENT;
     } else if (data.role === 'serviceProviderAdmin') {
       newUser.status = 'pending';
-    }else if(data.role === 'serviceProviderStaff') {
+      newUser.role = UserRole.SERVICE_PROVIDER_ADMIN;
+    } else if (data.role === 'serviceProviderStaff') {
       newUser.status = 'active';
+      newUser.role = UserRole.SERVICE_PROVIDER_STAFF;
     } else {
       console.error('Invalid user role:', data.role);
       throw new ConflictException('Invalid user role');
@@ -41,7 +45,8 @@ export class UserService {
     if (newUser.status !== 'active') {
       return { user: userData, token: '' };
     }
-    const token = this.jwtService.sign({ sub: newUser.id, username: newUser.username });
+    const payload = { sub: userData.id, username: userData.username, role: userData.role };
+    const token = this.jwtService.sign(payload);
 
     return { user: userData, token };
   }
@@ -66,7 +71,8 @@ export class UserService {
     if (!isMatch) throw new ConflictException('Invalid credentials');
 
     const { password: _, ...userData } = user;
-    const token = this.jwtService.sign({ sub: user.id, username: user.username });
+    const payload = { sub: user.id, username: user.username, role: user.role };
+    const token = this.jwtService.sign(payload);
 
     return { user: userData, token };
   }

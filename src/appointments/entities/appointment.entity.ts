@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Service } from '../../services/entities/service.entity';
-import { User } from '../../users/entities/user.entity';
+import { User } from '../../user/user.entity'; 
 
 @Entity()
 export class Appointment {
