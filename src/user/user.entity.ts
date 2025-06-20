@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { UserRole } from './dto/create-user.dto';
+import { Service } from '../services/entities/service.entity';
 
 @Entity()
 export class User {
@@ -54,4 +56,7 @@ export class User {
 
   @Column({ nullable: true })
   status?: string;
+
+  @OneToMany(() => Service, service => service.user)
+  services: Service[];
 }

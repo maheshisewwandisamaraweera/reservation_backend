@@ -14,6 +14,13 @@ export class ServicesService {
     return this.servicesRepository.find();
   }
 
+  findAllByUser(userId: string): Promise<Service[]> {
+    return this.servicesRepository.find({
+      where: { user: { id: Number(userId) } },
+      relations: ['user'],
+    });
+  }
+
   findOne(id: number): Promise<Service> {
     return this.servicesRepository.findOneBy({ id });
   }
