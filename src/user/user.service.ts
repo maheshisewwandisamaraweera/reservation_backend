@@ -30,7 +30,7 @@ export class UserService {
       newUser.status = 'pending';
       newUser.role = UserRole.SERVICE_PROVIDER_ADMIN;
     } else if (data.role === 'serviceProviderStaff') {
-      newUser.status = 'active';
+      newUser.status = 'pending';
       newUser.role = UserRole.SERVICE_PROVIDER_STAFF;
     } else {
       console.error('Invalid user role:', data.role);
@@ -101,6 +101,44 @@ export class UserService {
     if (!user) throw new ConflictException('User not found');
 
     user.status = status;
+    return this.userRepo.save(user);
+  }
+  
+  async findBusinessNames(): Promise<Partial<User>[]> {
+    return this.userRepo.find({
+      select: ['id', 'businessName', 'businessType'],
+      where: { role: UserRole.SERVICE_PROVIDER_ADMIN },
+    });
+  }
+
+  async findStaffListByBusinessName(businessName: string): Promise<User[]> {
+    return this.userRepo.find({
+      where: { businessName, role: UserRole.SERVICE_PROVIDER_STAFF },
+      relations: ['services'],
+    });
+  }
+
+  async updateStaffUserStatus(userId: string): Promise<User> {
+    const user = await this.findByUserId(userId);
+    if (!user) throw new ConflictException('User not found');
+
+    if (user.role !== UserRole.SERVICE_PROVIDER_STAFF) {
+      throw new ConflictException('User is not a service provider staff');
+    }
+
+    user.status = 'active';
+    return this.userRepo.save(user);
+  }
+
+  async removeStaffUser(userId: string): Promise<User> {
+    const user = await this.findByUserId(userId);
+    if (!user) throw new ConflictException('User not found');
+
+    if (user.role !== UserRole.SERVICE_PROVIDER_STAFF) {
+      throw new ConflictException('User is not a service provider staff');
+    }
+
+    user.status = 'hold';
     return this.userRepo.save(user);
   }
 }

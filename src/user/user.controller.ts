@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -54,4 +54,29 @@ export class UserController {
     const updatedUser = await this.userService.updateUserStatus(userId, status);
     return updatedUser;
   }
+
+  @Get('business')
+  async getBusinessUsers() {
+    const businessUsers = await this.userService.findBusinessNames();
+    return businessUsers;
+  }
+
+  @Get('serviceStaff/:businessName')
+  async getServiceStaff(@Param('businessName') businessName: string) {
+    const services = await this.userService.findStaffListByBusinessName(businessName);
+    return services;
+  }
+
+  @Post('serviceStaff/add/:userId')
+  async addServiceStaffById(@Param('userId')  userId: string) {
+    const updatedUser = await this.userService.updateStaffUserStatus(userId);
+    return updatedUser;
+  }
+
+  @Delete('serviceStaff/remove/:userId')
+  async removeServiceStaffById(@Param('userId') userId: string) {
+    const updatedUser = await this.userService.removeStaffUser(userId);
+    return updatedUser;
+  }
+
 }
