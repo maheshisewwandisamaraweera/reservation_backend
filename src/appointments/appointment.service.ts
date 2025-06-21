@@ -5,6 +5,7 @@ import { Appointment } from './entities/appointment.entity';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Service } from '../services/entities/service.entity';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class AppointmentService {
@@ -14,11 +15,14 @@ export class AppointmentService {
 
     @InjectRepository(Service)
     private serviceRepo: Repository<Service>,
+
+    @InjectRepository(User) // Inject User repository
+    private userRepo: Repository<User>,
   ) {}
 
   async create(dto: CreateAppointmentDto) {
-    console.log('Creating appointment with data:', dto.userId);
-    const user = await this.serviceRepo.findOne({ where: { id: dto.userId } });
+    console.log('Creating appointment with data:', dto);
+    const user = await this.userRepo.findOne({ where: { id: dto.userId } });
     if (!user) {
       throw new Error('User not found');
     }

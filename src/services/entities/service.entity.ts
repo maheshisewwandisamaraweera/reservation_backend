@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToOne, ManyToMany } from 'typeorm';
 import { Appointment } from '../../appointments/entities/appointment.entity';
 import { Review } from '../../reviews/entities/review.entity';
 import { User } from '../../user/user.entity';
@@ -11,7 +11,7 @@ export class Service {
   @ManyToOne( () => User, user => user.services)
   user: User;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column()

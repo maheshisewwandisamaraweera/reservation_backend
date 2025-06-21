@@ -58,6 +58,7 @@ export class UserController {
   @Get('business')
   async getBusinessUsers() {
     const businessUsers = await this.userService.findBusinessNames();
+    console.log('Business users:', businessUsers);
     return businessUsers;
   }
 
