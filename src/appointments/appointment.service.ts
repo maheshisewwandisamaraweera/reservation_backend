@@ -41,6 +41,10 @@ export class AppointmentService {
     return this.repo.save(appointment);
   }
 
+  async findAllAppointments() {
+    return this.repo.find({ relations: ['user', 'service'] });
+  }
+
   findAll(userId: string) {
     return this.repo.find({where: { user: { id: Number(userId) } }, relations: ['service'] });
   }
@@ -55,5 +59,14 @@ export class AppointmentService {
 
   remove(id: number) {
     return this.repo.delete(id);
+  }
+
+  async confirmAppointment(id: string, confirmed: boolean) {
+    const appointment = await this.repo.findOneBy({ id: Number(id) });
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+    appointment.confirmed = confirmed;
+    return this.repo.save(appointment);
   }
 }
