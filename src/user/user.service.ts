@@ -141,4 +141,23 @@ export class UserService {
     user.status = 'hold';
     return this.userRepo.save(user);
   }
+
+  async saveOtp(userId: string, otp: string, expiresAt: Date): Promise<User> {
+    const user = await this.findByUserId(userId);
+    if (!user) throw new ConflictException('User not found');
+
+    user.otp = otp;
+    user.otpExpiresAt = expiresAt;
+    return this.userRepo.save(user);
+  }
+
+  async resetPassword(email: string, newPassword: string): Promise<User> {
+    const user = await this.findByEmail(email);
+    if (!user) throw new ConflictException('User not found');
+    
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.otp = null;
+    user.otpExpiresAt = null; 
+    return this.userRepo.save(user);
+  }
 }

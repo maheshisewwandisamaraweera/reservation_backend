@@ -27,6 +27,7 @@ import { HelloController } from './hello/hello.controller';
     PaymentsModule,
     UserModule,
     AuthModule,
+    
   ],
   controllers: [HelloController],
 })
