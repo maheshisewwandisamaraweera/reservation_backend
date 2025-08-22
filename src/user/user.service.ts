@@ -32,7 +32,11 @@ export class UserService {
     } else if (data.role === 'serviceProviderStaff') {
       newUser.status = 'pending';
       newUser.role = UserRole.SERVICE_PROVIDER_STAFF;
-    } else {
+    }else if (data.role === 'superAdmin') {
+      newUser.status = 'active';
+      newUser.role = UserRole.SUPER_ADMIN;
+    }
+     else {
       console.error('Invalid user role:', data.role);
       throw new ConflictException('Invalid user role');
 
