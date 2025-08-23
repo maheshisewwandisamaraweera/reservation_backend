@@ -68,8 +68,8 @@ export class UserController {
   }
 
   @Get('business')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SERVICE_PROVIDER_ADMIN, UserRole.SERVICE_PROVIDER_STAFF, UserRole.CLIENT, UserRole.SUPER_ADMIN)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
+  //@Roles(UserRole.SERVICE_PROVIDER_ADMIN, UserRole.SERVICE_PROVIDER_STAFF, UserRole.CLIENT, UserRole.SUPER_ADMIN)
   async getBusinessUsers() {
     const businessUsers = await this.userService.findBusinessNames();
     console.log('Business users:', businessUsers);
